@@ -1,7 +1,7 @@
 version: '2'
 services:
   ghost-data:
-    build: ./data
+    build: ./ghost-data
     networks:
       - ghost
 
