@@ -38,8 +38,8 @@ services:
     volumes:
     - /srv/docker/gitlab/gitlab:/home/git/data:Z
     environment:
-    - VIRTUAL_HOST=kimsufi.cnode.fr
-    - LETSENCRYPT_HOST=kimsufi.cnode.fr
+    - VIRTUAL_HOST=git.kimsufi.cnode.fr
+    - LETSENCRYPT_HOST=git.kimsufi.cnode.fr
     - LETSENCRYPT_EMAIL=hourliert@gmail.com
 
     - DEBUG=false
@@ -59,8 +59,7 @@ services:
     - GITLAB_HTTPS=true
     - SSL_SELF_SIGNED=false
 
-    - GITLAB_HOST=kimsufi.cnode.fr
-    - GITLAB_CI_HOST=kimsufici.cnode.fr
+    - GITLAB_HOST=git.kimsufi.cnode.fr
     - GITLAB_PORT=443
     - GITLAB_SSH_PORT=10022
     - GITLAB_RELATIVE_URL_ROOT=

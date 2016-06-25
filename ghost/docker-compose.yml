@@ -1,0 +1,27 @@
+version: '2'
+services:
+  ghost-data:
+    build: ./data
+    networks:
+      - ghost
+
+  ghost:
+    image: ghost:0.8.0
+    container_name: ghost-blog
+    networks:
+      - ghost
+      - front
+    volumes_from:
+      - ghost-data
+    environment:
+      - VIRTUAL_HOST=blog.kimsufi.cnode.fr
+      - LETSENCRYPT_HOST=blog.kimsufi.cnode.fr
+      - LETSENCRYPT_EMAIL=hourliert@gmail.com
+
+      - NODE_ENV=production
+
+networks:
+  ghost:
+  front:
+    external:
+      name: proxy_front
