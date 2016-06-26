@@ -4,9 +4,11 @@ services:
     build: ./ghost-data
     networks:
       - ghost
+    volumes:
+      - /srv/docker/ghost:/var/lib/ghost
 
   ghost:
-    image: ghost:0.8.0
+    build: ./ghost
     container_name: ghost-blog
     networks:
       - ghost
