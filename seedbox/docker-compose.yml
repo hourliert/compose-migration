@@ -1,0 +1,72 @@
+version: '2'
+services:
+  torrent-data:
+    build: ./seedbox-data
+    networks:
+      - torrent
+    volumes:
+      - /srv/docker/torrent:/rtorrent
+
+  torrent:
+    image: kfei/docktorrent
+    container_name: torrent
+    networks:
+      - torrent
+      - front
+    volumes_from:
+      - torrent-data
+    ports:
+      - "45566:45566"
+    dns: 8.8.8.8
+    tty: true
+    environment:
+      - VIRTUAL_HOST=torrent.kimsufi.cnode.fr
+      - LETSENCRYPT_HOST=torrent.kimsufi.cnode.fr
+      - LETSENCRYPT_EMAIL=hourliert@gmail.com
+
+  cakebox:
+    image: timonier/cakebox:1.8.6
+    container_name: cakebox
+    networks:
+      - front
+    volumes_from:
+      - torrent-data
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+    expose:
+      - "80"
+    environment:
+      - VIRTUAL_HOST=cake.kimsufi.cnode.fr
+      - LETSENCRYPT_HOST=cake.kimsufi.cnode.fr
+      - LETSENCRYPT_EMAIL=hourliert@gmail.com
+      - CAKEBOX_USER=root
+      - CAKEBOX_ROOT=/rtorrent
+      - RIGHTS_CAN_DELETE=true
+
+  plex-data:
+    build: ./plex-data
+    networks:
+      - torrent
+    volumes:
+      - /srv/docker/plex:/config
+      - /srv/docker/torrent:/data
+
+  plex:
+    image: linuxserver/plex
+    container_name: plex
+    network_mode: "host"
+    volumes_from:
+      - plex-data
+    environment:
+      - VERSION=latest
+      - PUID=0
+      - PGID=0
+
+# run : ssh -L 32400:localhost:32400 -N root@kimsufi.cnode.fr
+# loging to http://localhost:32400/web, check remote access
+
+networks:
+  torrent:
+  front:
+    external:
+      name: proxy_front
